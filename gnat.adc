@@ -1,0 +1,35 @@
+--  The following pragma controls whether runtime checks are enabled
+--  for the specified aspects' (or pragma) assertion expressions.
+--  Of course, if your code doesn't have any of these then the pragma will
+--  have no effect, but it won't cause any harm either.
+pragma Assertion_Policy
+   (Pre       => Check,
+    Pre'Class => Check,
+    --  If your code, or code you use, applies preconditions as
+    --  functional checks, not just for proof, you should enable
+    --  those checks. Likewise, if you are using code that is somewhat
+    --  new to you, and don't necessarily know every detail of how to
+    --  use it, the preconditions can help with that. If they are only
+    --  used for proof there's no point in checking them at run-time.
+    Static_Predicate => Ignore,
+    --  Static predicates are checked at compile, except for code getting
+    --  values from external sources or unchecked conversions. If that's
+    --  something your code does you may want to enable the checks, although
+    --  you can (and should) use 'Valid explicitly.
+    Dynamic_Predicate         => Check,  -- in case it is functional
+    Type_Invariant            => Check,  -- in case it is functional
+    Type_Invariant'Class      => Check,  -- in case it is functional
+    Default_Initial_Condition => Ignore,
+    Assert                    => Ignore,
+    --  If you enable assertion checks (which includes Loop_Invariants) but
+    --  disable Ghost code checks the compiler will rightfully complain if
+    --  you reference Ghost entities/code in those assertions.
+    Ghost => Ignore,
+    -- You should not check ghost code. That's why it's ghost code. Unless
+    --  you need to debug it... but then disable the checks.
+    Post       => Ignore,
+    Post'Class => Ignore);
+    --  You should check postconditions for new code under development, but
+    --  especially for well-known mature code you can reasonably disable them.
+
+
