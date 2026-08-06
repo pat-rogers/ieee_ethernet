@@ -378,4 +378,38 @@ package body IEEE_Ethernet.PHY is
       Success := True;
    end Await_Auto_Negotiation_Completion;
 
+   ----------------------------
+   -- Confirm_Device_Present --
+   ----------------------------
+
+   procedure Confirm_Device_Present
+     (This       : PHY_Transceiver'Class;
+      At_Address : PHY_Address;
+      Success    : out Boolean)
+   is
+      ID_High : SMI.IO.Register_Value;
+      ID_Low  : SMI.IO.Register_Value;
+
+      Gated_Clock_Reading  : constant SMI.IO.Register_Value := 16#0000#;
+      Floating_Bus_Reading : constant SMI.IO.Register_Value := 16#FFFF#;
+   begin
+      --  A live PHY returns fixed, nonzero identifier words in registers 2
+      --  and 3. A gated MAC clock reads all-zeros and a floating bus reads
+      --  all-ones; neither can come from a real device, so reject both. This
+      --  is not an identity check -- the vendor ships several OUIs -- it only
+      --  confirms that something is answering, which Read_SMI_Register's
+      --  Success alone does not tell us (that reports only that the MII Busy
+      --  bit cleared).
+      This.SMI_IO.Read_SMI_Register (At_Address, SMI_PHYI1R, ID_High, Success);
+      if not Success then
+         return;
+      end if;
+      This.SMI_IO.Read_SMI_Register (At_Address, SMI_PHYI2R, ID_Low, Success);
+      if not Success then
+         return;
+      end if;
+      Success := not (ID_High = Gated_Clock_Reading and then ID_Low = Gated_Clock_Reading) and then
+                 not (ID_High = Floating_Bus_Reading and then ID_Low = Floating_Bus_Reading);
+   end Confirm_Device_Present;
+
 end IEEE_Ethernet.PHY;

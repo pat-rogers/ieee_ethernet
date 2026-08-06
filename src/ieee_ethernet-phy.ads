@@ -162,6 +162,15 @@ package IEEE_Ethernet.PHY is
    --  auto-configuration steps manually, again setting Success as the
    --  steps proceed, returning immediately if any step fails.
 
+   procedure Confirm_Device_Present
+     (This       : PHY_Transceiver'Class;
+      At_Address : PHY_Address;
+      Success    : out Boolean);
+   --  Returns whether a PHY device is actually present. A gated MAC clock
+   --  or an absent PHY yields no genuine data even though Read_SMI_Register
+   --  still reports Success, so this procedure confirms that a live device
+   --  is answering.
+
 private
 
    type SMI_IO_Driver_Reference is access all SMI_IO_Driver'Class with Storage_Size => 0;
