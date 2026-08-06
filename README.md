@@ -44,7 +44,7 @@ There are no crate dependencies: the sources use only `Ada.Real_Time`, `Ada.Unch
 
 ## Tests
 
-`test/host/` holds a partial host-native harness for the root package functions, including address query functions and the subnet mask validity check function, which are target-independent and so runs on the development machine unchanged. Only the closure of the main is built, so the SMI and PHY units are not compiled there.
+`test/host/` holds a partial host-native harness for the root package functions, including address query functions and the subnet mask validity check function. These functions are target-independent so the test runs on the development machine. Only the closure of the main is built, so the SMI and PHY units are not compiled there.
 
 ## License
 
