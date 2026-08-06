@@ -1,5 +1,5 @@
 name = "ieee_ethernet"
-version = "1.0.0"
+version = "1.0.1"
 
 description = "IEEE 802.3 Ethernet declarations, with the SMI and PHY interfaces"
 
